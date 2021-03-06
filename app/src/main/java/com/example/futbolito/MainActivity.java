@@ -3,6 +3,7 @@ package com.example.futbolito;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.hardware.Sensor;
+import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
@@ -62,6 +63,83 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
 
+        sensorEventListener = new SensorEventListener(){
+        @Override
+            public void onSensorChanged(SensorEvent Event){
+                float x = Event.values[0];
+                float z = Event.values[1];
+                float y = Event.values[2];
+
+                if (x<-1 && Pelota.getX()<ancho-Pelota.getWidth()){
+                        Pelota.setX(Pelota.getX()+5);
+                }else if (x>1 && Pelota.getX()>1){
+                    Pelota.setX(Pelota.getX()-5);
+                }
+
+                if (y<-1){
+                    if(Pelota.getY()>0){
+                        Pelota.setY(Pelota.getY()-5);
+                    }else if(Pelota.getX()>400&&Pelota.getX()<580){
+                        Puntaje(2);
+                    }
+                }else if (y>1){
+                    if(Pelota.getY()<ancho-Pelota.getHeight()+625){
+                        Pelota.setY(Pelota.getY()+5);
+                    }else if(Pelota.getX()>400&&Pelota.getX()<580){
+                        Puntaje(1);
+                    }
+                }
+
+                if(z<-1){
+                    Pelota.setMaxHeight(100);
+                    Pelota.setMaxWidth(100);
+                }else if(z>1){
+                    Pelota.setMaxHeight(100);
+                    Pelota.setMaxWidth(100);
+                }
+
+        }
+
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int accuracy) {
+            }
+        };
+
+        sensorManager.registerListener(sensorEventListener,sensor,sensorManager.SENSOR_DELAY_FASTEST);
 
     }
+
+    private void Puntaje(int equipo){
+        switch (equipo){
+            case 1:
+                PuntajeEquipo1++;
+                MarcadorEquipo1.setText(String.valueOf(PuntajeEquipo1));
+                break;
+            case 2:
+                PuntajeEquipo2++;
+                MarcadorEquipo2.setText(String.valueOf(PuntajeEquipo2));
+                break;
+        }
+        Pelota.setX(540);
+        Pelota.setY(888);
+    }
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+    }
+
+    @Override
+    protected void onPause(){
+        sensorManager.unregisterListener(sensorEventListener);
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume(){
+        sensorManager.registerListener(sensorEventListener,sensor,sensorManager.SENSOR_DELAY_FASTEST);
+        super.onResume();
+        Puntaje(0);
+    }
+
 }
