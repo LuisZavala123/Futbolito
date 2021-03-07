@@ -67,8 +67,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
             public void onSensorChanged(SensorEvent Event){
                 float x = Event.values[0];
-                float z = Event.values[1];
-                float y = Event.values[2];
+                float y = Event.values[1];
+                float z = Event.values[2];
 
                 if (x<-1 && Pelota.getX()<ancho-Pelota.getWidth()){
                         Pelota.setX(Pelota.getX()+5);
@@ -79,14 +79,18 @@ public class MainActivity extends AppCompatActivity {
                 if (y<-1){
                     if(Pelota.getY()>0){
                         Pelota.setY(Pelota.getY()-5);
-                    }else if(Pelota.getX()>400&&Pelota.getX()<580){
+                    }else if(Pelota.getX()>(ancho/2)-30&&Pelota.getX()<(ancho/2)+30){
                         Puntaje(2);
+                    }else{
+                        Puntaje(0);
                     }
                 }else if (y>1){
                     if(Pelota.getY()<ancho-Pelota.getHeight()+625){
                         Pelota.setY(Pelota.getY()+5);
-                    }else if(Pelota.getX()>400&&Pelota.getX()<580){
+                    }else if(Pelota.getX()>(ancho/2)-30&&Pelota.getX()<(ancho/2)+30){
                         Puntaje(1);
+                    }else{
+                        Puntaje(0);
                     }
                 }
 
@@ -120,8 +124,8 @@ public class MainActivity extends AppCompatActivity {
                 MarcadorEquipo2.setText(String.valueOf(PuntajeEquipo2));
                 break;
         }
-        Pelota.setX(540);
-        Pelota.setY(888);
+        Pelota.setX(ancho/2);
+        Pelota.setY(alto/2);
     }
 
     @Override
